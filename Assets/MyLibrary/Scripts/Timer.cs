@@ -2,6 +2,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using TMPro;
 
 
 namespace MyLibrary
@@ -16,13 +18,15 @@ namespace MyLibrary
 
 
         public UnityEvent timeout;
-        public bool autoStart = false;
+        public bool autoStart = true;
         public bool autoRestart = false;
         public bool useScaledTime = true;
         public float countDownTime = 1.0f;
         public float timeScale = 1.0f;
         public float timeLeft { get { return m_timeLeft;} }
         public bool countingDown { get { return m_timeLeft > 0.0f; } }
+        public TMP_Text timerText;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -51,6 +55,16 @@ namespace MyLibrary
                     }
                 }
             }
+            UpdateTimerUI();
+        }
+        void UpdateTimerUI()
+        {
+            float seconds = Mathf.Max(m_timeLeft, 0);
+            int minutes = Mathf.FloorToInt(seconds / 60);
+            int remainingSeconds = Mathf.FloorToInt(seconds % 60);
+
+            timerText.text = string.Format("{0:D2}:{1:D2}", minutes, remainingSeconds);
+
         }
         public void StartTimerFromEvent()
         {
